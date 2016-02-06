@@ -47,3 +47,67 @@ function update() {
         isInProgress = false;
     }, 16);
 }
+
+$(document).ready(function () {
+    // Parámetros iniciales
+    var $envTemp = $('#env-temp');
+    var $tankVolume = $('#tank-volume');
+    var $waterVolume = $('#water-volume');
+    var $heatPower = $('#heat-power');
+    var $inWaterFlow = $('#in-water-flow');
+    var $outWaterFlow = $('#out-water-flow');
+
+    // Botones de simulación
+    var $startSimulation = $('#start-simulation');
+    var $stopSimulation = $('#stop-simulation');
+
+    var params = {
+        envTemp: 20,
+        tankVolume: 2500,
+        waterVolume: 1250,
+        heatPower: 17400,
+        inWaterFlow: 1.45,
+        outWaterFlow: 1.45,
+        onSimulation: false, 
+        simulationStarted: function() { return this.onSimulation },
+    };
+
+    $envTemp.val(params.envTemp);
+    $tankVolume.val(params.tankVolume);
+    $waterVolume.val(params.waterVolume);
+    $heatPower.val(params.heatPower);
+    $inWaterFlow.val(params.inWaterFlow);
+    $outWaterFlow.val(params.outWaterFlow);
+
+    var disableParamsForm = function () {
+        $envTemp.prop('disabled', true);
+        $tankVolume.prop('disabled', true);
+        $waterVolume.prop('disabled', true);
+        $heatPower.prop('disabled', true);
+        $inWaterFlow.prop('disabled', true);
+        $outWaterFlow.prop('disabled', true);
+    };
+
+    var enableParamsForm = function () {
+        $envTemp.prop('disabled', false);
+        $tankVolume.prop('disabled', false);
+        $waterVolume.prop('disabled', false);
+        $heatPower.prop('disabled', false);
+        $inWaterFlow.prop('disabled', false);
+        $outWaterFlow.prop('disabled', false);
+    };
+
+    $startSimulation.on('click', function () {
+        params.onSimulation = true;
+        disableParamsForm();
+        $stopSimulation.prop('disabled', false);
+        $startSimulation.prop('disabled', true);
+    });
+
+    $stopSimulation.on('click', function () {
+        params.onSimulation = false;
+        enableParamsForm();
+        $stopSimulation.prop('disabled', true);
+        $startSimulation.prop('disabled', false);
+    });
+});
