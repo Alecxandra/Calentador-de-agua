@@ -111,3 +111,5 @@ $(document).ready(function () {
         $startSimulation.prop('disabled', false);
     });
 });
+
+$("[name='heater-checkbox']").bootstrapSwitch();
