@@ -6,6 +6,7 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Styles.Render("https://fonts.googleapis.com/css?family=Open+Sans:400,300,600&subset=latin,cyrillic")
+    @Styles.Render("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/css/bootstrap2/bootstrap-switch.min.css")
     @Scripts.Render("~/bundles/modernizr")
     
 
@@ -16,6 +17,7 @@
         
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/js/bootstrap-switch.min.js");
     @Scripts.Render("~/Scripts/Site.js")
     @RenderSection("scripts", required: false)
 </body>
