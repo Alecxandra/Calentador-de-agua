@@ -13,7 +13,7 @@ body {
   height: 480px;
   width: 280px;
   position: absolute;
-  top: 70%;
+  top: 80%;
   left: 70%;
   -webkit-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%);
@@ -420,7 +420,9 @@ html,
 
             .tap-entrada{
                 fill: grey;
-                position: relative;
+                position: absolute;
+                top: 2%;
+                left: 50%;
                 margin: 20px auto 0;
                 width: 200px;
                 height: 200px;
@@ -432,7 +434,9 @@ html,
             
              .tap-salida{
                 fill: grey;
-                position: relative;
+                position: absolute;
+                top: 88%;
+                left: 80%;
                 margin: 20px auto 0;
                 width: 200px;
                 height: 200px;
