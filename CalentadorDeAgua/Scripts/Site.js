@@ -113,3 +113,68 @@ $(document).ready(function () {
 });
 
 $("[name='heater-checkbox']").bootstrapSwitch();
+
+//---Llave entrada
+var tapOn = false,
+waterTL = new TimelineLite();
+
+Math.randMinMax = function (t, n, a) {
+    var r = t + Math.random() * (n - t)
+    return a && (r = Math.round(r)), r
+}
+
+
+$('.tap-entrada').click(function () {
+    $(this).toggleClass('on');
+    tapOn = !tapOn;
+    if (tapOn) {
+        water2();
+    } else {
+        waterTL.clear();
+        $('#emitter-entrada').remove();
+        // waterTL.kill({repeat: true});
+
+    }
+});
+
+
+var water2 = function () {
+    $('.tap-entrada').append('<div id="emitter-entrada" />');
+    for (var i = 0; i < 200; i++) {
+        $particle = $('<div class="particle" />');
+        var x = Math.randMinMax(60, -60);
+        waterTL.to($particle, /* sets the length of journey for THIS generated particle */ Math.randMinMax(1, 2), { x: x, y: 200, repeat: -1, ease: Power0.easeOut, repeatDelay: Math.randMinMax(0, 2) }, Math.randMinMax(0, 3));
+        $('#emitter-entrada').append($particle);
+    }
+
+}
+
+//---llave salida-----
+var tapOn1 = false,
+waterTL1 = new TimelineLite();
+
+
+$('.tap-salida').click(function () {
+    $(this).toggleClass('on');
+    tapOn1 = !tapOn1;
+    if (tapOn1) {
+        water1();
+    } else {
+        waterTL1.clear();
+        $('#emitter-salida').remove();
+        // waterTL.kill({repeat: true});
+
+    }
+});
+
+
+var water1 = function () {
+    $('.tap-salida').append('<div id="emitter-salida" />');
+    for (var i = 0; i < 200; i++) {
+        $particle = $('<div class="particle" />');
+        var x = Math.randMinMax(60, -60);
+        waterTL.to($particle, /* sets the length of journey for THIS generated particle */ Math.randMinMax(1, 2), { x: x, y: 200, repeat: -1, ease: Power0.easeOut, repeatDelay: Math.randMinMax(0, 2) }, Math.randMinMax(0, 3));
+        $('#emitter-salida').append($particle);
+    }
+
+}

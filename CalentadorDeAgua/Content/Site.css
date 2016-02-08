@@ -4,7 +4,7 @@
 }
 
 body {
-  background: #f0f6fc;
+  background: #eceff1 ;
   font: 14px/1 'Open Sans', helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
@@ -398,3 +398,91 @@ body {
             transform: scale(1) translate(0, -100px);
   }
 }
+
+.alert-success {
+   background-color:#00e676;
+   border-color: #d6e9c6;
+}
+
+html,
+            body,
+            #scene {
+              width: 100%;
+              height: 100%;
+            }
+
+           
+            
+            svg * {
+                fill: inherit;
+            }
+                
+
+            .tap-entrada{
+                fill: grey;
+                position: relative;
+                margin: 20px auto 0;
+                width: 200px;
+                height: 200px;
+            }
+            .tap-entrada svg{
+                width: 100%;
+                height: 100%;
+            }
+            
+             .tap-salida{
+                fill: grey;
+                position: relative;
+                margin: 20px auto 0;
+                width: 200px;
+                height: 200px;
+            }
+            .tap-salida svg{
+                width: 100%;
+                height: 100%;
+            }
+            
+            use.faucet-off{
+                display:block;
+            }
+            
+            use.faucet-on{
+                display: none;
+            }
+            
+            .tap-entrada.on use.faucet-off{
+                display: none;
+            }
+            
+            .tap-entrada.on use.faucet-on{
+                display: block;
+            }
+
+            .tap-salida.on use.faucet-off{
+                display: none;
+            }
+            
+            .tap-salida.on use.faucet-on{
+                display: block;
+            }
+            #emitter-entrada {
+              position: absolute;
+                right: 20px;
+                bottom: 30px;
+            }
+            #emitter-salida {
+              position: absolute;
+                right: 20px;
+                bottom: 30px;
+            }
+
+            .particle {
+              position: absolute;
+              width: 10px;
+              height: 10px;
+              background: lightblue;
+                opacity: 0.7;
+              border-radius: 50%;
+                z-index: -1;
+
+            }
