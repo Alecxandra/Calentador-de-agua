@@ -236,6 +236,7 @@
         inOpen: false,
         outOpen: false,
         heatOn: true,
+        automatic: false,
         time: 0,
     };
 
@@ -273,8 +274,13 @@
             var newPercent = currentLiquidVolume / littersToM3(params.tankVolume) * 100;
             var percent = newPercent | 0
 
-            if (percent >= 100) {
+            if (percent >= 100 && currentSimulation.inOpen) {
+                update(100);
                 inTap();
+            }
+
+            if (percent <= 0 && currentSimulation.outOpen) {
+                outTap();
             }
 
             update(percent);
@@ -282,17 +288,35 @@
             var neoTemp = celsiusToKelvins(params.envTemp) + (params.heatPower) / (params.waterDensity * currentLiquidVolume * params.waterSpecificHeat) * currentSimulation.time;
             currentSimulation.currentTemp = neoTemp;
             $tempDisplay.val(kelvinsToCelsius(currentSimulation.currentTemp));
-            if (neoTemp == currentSimulation.userTemp) {
-                console.log("Llegue a la temp");
-            };
 
+            //Situaciones en automático
+            if (neoTemp <= currentSimulation.userTemp && currentSimulation.automatic) {
+                if (currentSimulation.inOpen) inTap();
+                currentSimulation.automatic = false;
+            };
             console.log(currentSimulation);
 
         }
     }, 1000);
 
     $changeUserTemp.on('click', function () {
-        currentSimulation.userTemp = celsiusToKelvins(parseInt($userTemp.val()));
-        console.log("nueva temp " + currentSimulation.userTemp);
+        if (parseInt($userTemp.val()) < params.envTemp) {
+            alert("La temperatura deseada es menor que la temperatura ambiente.");
+        } else {
+            currentSimulation.automatic = true;
+            currentSimulation.userTemp = celsiusToKelvins(parseInt($userTemp.val()));
+            if (currentSimulation.currentTemp - currentSimulation.userTemp > 0) {
+                // hay que enfriar el agua
+                $heatSwitch.bootstrapSwitch('state', false);
+                //Estategia apagar el calentador y llenar de agua fria
+                if (!currentSimulation.inOpen && currentSimulation.currentWaterVolume < littersToM3(params.tankVolume)) {
+                    inTap();
+                }
+            } else {
+                // hay que calentar el agua
+                $heatSwitch.bootstrapSwitch('state', true);
+            }
+            console.log("nueva temp " + currentSimulation.userTemp);
+        }
     });
 });
