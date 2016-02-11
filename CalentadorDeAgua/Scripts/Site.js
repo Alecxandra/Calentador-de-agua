@@ -151,6 +151,15 @@
     $inWaterFlow.val(params.inWaterFlow);
     $outWaterFlow.val(params.outWaterFlow);
 
+    var changeParams = function () {
+        params.envTemp = parseInt($envTemp.val());
+        params.tankVolume = parseInt($tankVolume.val());
+        params.waterVolume = parseInt($waterVolume.val());
+        params.heatPower = parseInt($heatPower.val());
+        params.inWaterFlow = parseInt($inWaterFlow.val());
+        params.outWaterFlow = parseInt($outWaterFlow.val());
+    };
+
     var disableParamsForm = function () {
         $envTemp.prop('disabled', true);
         $tankVolume.prop('disabled', true);
@@ -183,6 +192,7 @@
 
     $startSimulation.on('click', function () {
         params.onSimulation = true;
+        changeParams();
         disableParamsForm();
         enableSimulationForm();
         $stopSimulation.prop('disabled', false);
