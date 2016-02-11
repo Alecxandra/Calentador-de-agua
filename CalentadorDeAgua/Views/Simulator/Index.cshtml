@@ -62,21 +62,21 @@
             <div class="alert alert-success" role="alert" id="simulation-panel">
                 <div class="form-horizontal">
                     <div class="form-group">
-                        <label for="actual-temp" class="col-sm-5 control-label">Temperatura Actual(Celcius)</label>
+                        <label for="actual-temp" class="col-sm-5 control-label">Temperatura Actual(Celsius)</label>
                         <div class="col-sm-7">
-                            <input type="number" class="form-control" id="actual-temp" />
+                            <input type="number" class="form-control" id="actual-temp" disabled />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="desired-temp" class="col-sm-5 control-label">Temperatura deseada(Celcius)</label>
+                        <label for="desired-temp" class="col-sm-5 control-label">Temperatura deseada(Celsius)</label>
                         <div class="col-sm-7">
-                            <input type="number" class="form-control" id="desired-temp" />
+                            <input disabled type="number" class="form-control" id="desired-temp" />
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="heater-op" class="col-sm-5 control-label">Calentador</label>
                         <div class="col-sm-7">
-                            <input type="checkbox" checked class="form-control" name="heater-checkbox" data-size="normal" id="heater-op" data-off-color="warning">
+                            <input disabled type="checkbox" checked class="form-control" name="heater-checkbox" data-size="normal" id="heater-op" data-off-color="warning">
                         </div>
                     </div>
                 </div>
@@ -154,7 +154,6 @@
                 <div class="percent__sign">%</div>
             </div>
         </div>
-        <button id="button" class="button">Drink</button>
         <div id="water" class="water">
             <svg viewBox="0 0 560 20" class="water__wave water__wave_back">
                 <use xlink:href="#wave"></use>
