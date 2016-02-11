@@ -131,6 +131,7 @@
     var $startSimulation = $('#start-simulation');
     var $stopSimulation = $('#stop-simulation');
     var $changeUserTemp = $('#change-user-temp');
+    var $saveInfo = $('#save-info');
 
     var params = {
         envTemp: 20,
@@ -197,6 +198,7 @@
         enableSimulationForm();
         $stopSimulation.prop('disabled', false);
         $startSimulation.prop('disabled', true);
+        $saveInfo.prop('disabled', true);
         resetSimulation();
 
         var newPercent = currentSimulation.currentWaterVolume / littersToM3(params.tankVolume) * 100;
@@ -210,6 +212,8 @@
         disableSimulationForm();
         $stopSimulation.prop('disabled', true);
         $startSimulation.prop('disabled', false);
+        $saveInfo.prop('disabled', false);
+
     });
 
     var littersToM3 = function (litters) { return litters * (0.001); };
@@ -319,4 +323,30 @@
             console.log("nueva temp " + currentSimulation.userTemp);
         }
     });
+
+    $saveInfo.on('click', function () {
+        $.ajax({
+            type: "POST",
+            url: '/Simulator/Insertar',
+            data: JSON.stringify({
+                envtemp: $('#env-temp').val().toString(),
+                volumenTanque: $('#tank-volume').val().toString(),
+                volumenAgua: $('#water-volume').val().toString(),
+                potenciaCalentador: $('#heat-power').val().toString(),
+                flujoEntranteAgua: $('#in-water-flow').val().toString(),
+                flujoSalienteAgua: $('#out-water-flow').val().toString(),
+                actualTemp: $('#actual-temp').val().toString(),
+                desiredTemp: $('#desired-temp').val().toString(),
+                time: currentSimulation.time.toString()
+
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+            }
+        });
+        $saveInfo.prop('disabled', true);
+        alert("La información se almacenó correctamente");
+    });
+
 });
