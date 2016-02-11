@@ -8,7 +8,7 @@
     function update(value) {
 
         if (isInProgress) return;
-        btn.removeEventListener('click', update);
+
         isInProgress = true;
 
         page.classList.add('page_animated');
@@ -25,7 +25,6 @@
         interval = setInterval(function () {
 
             if (diff === 0 || percent === random) {
-                btn.addEventListener('click', update);
                 clearInterval(interval);
                 isInProgress = false;
                 return;
@@ -63,7 +62,9 @@
         tapOn = !tapOn;
         if (tapOn) {
             water2();
+            currentSimulation.inOpen = true;
         } else {
+            currentSimulation.inOpen = false;
             waterTL.clear();
             $('#emitter-entrada').remove();
             // waterTL.kill({repeat: true});
@@ -93,7 +94,9 @@
         tapOn1 = !tapOn1;
         if (tapOn1) {
             water1();
+            currentSimulation.outOpen = true;
         } else {
+            currentSimulation.outOpen = false;
             waterTL1.clear();
             $('#emitter-salida').remove();
             // waterTL.kill({repeat: true});
@@ -127,14 +130,15 @@
     // Botones de simulación
     var $startSimulation = $('#start-simulation');
     var $stopSimulation = $('#stop-simulation');
+    var $changeUserTemp = $('#change-user-temp');
 
     var params = {
         envTemp: 20,
         tankVolume: 2500,
         waterVolume: 1250,
-        heatPower: 17400,
-        inWaterFlow: 1.45,
-        outWaterFlow: 1.45,
+        heatPower: 1740000,
+        inWaterFlow: 10.45,
+        outWaterFlow: 10.45,
         onSimulation: false, 
         waterDensity: 1000,
         waterSpecificHeat: 4190,
@@ -168,11 +172,13 @@
     var enableSimulationForm = function () {
         $userTemp.prop('disabled', false);
         $heatSwitch.bootstrapSwitch('toggleDisabled', false);
+        $changeUserTemp.prop('disabled', false);
     };
 
     var disableSimulationForm = function () {
         $userTemp.prop('disabled', true);
         $heatSwitch.bootstrapSwitch('toggleDisabled', true);
+        $changeUserTemp.prop('disabled', true);
     };
 
     $startSimulation.on('click', function () {
@@ -181,6 +187,11 @@
         enableSimulationForm();
         $stopSimulation.prop('disabled', false);
         $startSimulation.prop('disabled', true);
+        resetSimulation();
+
+        var newPercent = currentSimulation.currentWaterVolume / littersToM3(params.tankVolume) * 100;
+        console.log(newPercent);
+        update(newPercent | 0);
     });
 
     $stopSimulation.on('click', function () {
@@ -199,16 +210,79 @@
 
     var kelvinsToCelsius = function (kelvins) { return kelvins - 273.15; };
 
+    var resetSimulation = function() {
+        currentSimulation = {
+            userTemp: celsiusToKelvins(params.envTemp),
+            currentWaterVolume: littersToM3(params.waterVolume),
+            currentTemp: celsiusToKelvins(params.envTemp),
+            time: 0,
+        };
+    };
+
     var currentSimulation = {
         userTemp: celsiusToKelvins(params.envTemp),
         currentWaterVolume: littersToM3(params.waterVolume),
         currentTemp: celsiusToKelvins(params.envTemp),
+        inOpen: false,
+        outOpen: false,
+        heatOn: true,
+        time: 0,
     };
+
+    var inTap = function () {
+        $('.tap-entrada').trigger('click');
+    };
+
+    var outTap = function () {
+        $('.tap-salida').trigger('click');
+    };
+
+    $heatSwitch.on('switchChange.bootstrapSwitch', function(event, state) {
+        currentSimulation.heatOn = state;       
+    });
 
     // Función de revisión cada secundo 
     setInterval(function () {
         if (params.onSimulation) {
-            console.log("Estoy revisando");
+            if (currentSimulation.heatOn)
+                currentSimulation.time = currentSimulation.time + 1
+            if (!currentSimulation.heatOn && currentSimulation.time > 0)
+                currentSimulation.time = currentSimulation.time - 1
+
+            var currentLiquidVolume = currentSimulation.currentWaterVolume;
+            if (currentSimulation.inOpen && currentLiquidVolume <= littersToM3(params.tankVolume)) {
+                currentLiquidVolume = currentLiquidVolume + littersToM3(params.inWaterFlow);
+            }
+
+            if (currentSimulation.outOpen && currentLiquidVolume > 0) {
+                currentLiquidVolume = currentLiquidVolume - littersToM3(params.outWaterFlow);
+            }
+
+            currentSimulation.currentWaterVolume = currentLiquidVolume;
+
+            var newPercent = currentLiquidVolume / littersToM3(params.tankVolume) * 100;
+            var percent = newPercent | 0
+
+            if (percent >= 100) {
+                inTap();
+            }
+
+            update(percent);
+
+            var neoTemp = celsiusToKelvins(params.envTemp) + (params.heatPower) / (params.waterDensity * currentLiquidVolume * params.waterSpecificHeat) * currentSimulation.time;
+            currentSimulation.currentTemp = neoTemp;
+            $tempDisplay.val(kelvinsToCelsius(currentSimulation.currentTemp));
+            if (neoTemp == currentSimulation.userTemp) {
+                console.log("Llegue a la temp");
+            };
+
+            console.log(currentSimulation);
+
         }
     }, 1000);
+
+    $changeUserTemp.on('click', function () {
+        currentSimulation.userTemp = celsiusToKelvins(parseInt($userTemp.val()));
+        console.log("nueva temp " + currentSimulation.userTemp);
+    });
 });
