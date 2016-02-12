@@ -345,8 +345,81 @@
             success: function (response) {
             }
         });
+        simulacionesGuardadas.push({
+            id: indexSelect,
+            envtemp: $('#env-temp').val().toString(),
+            volumenTanque: $('#tank-volume').val().toString(),
+            volumenAgua: $('#water-volume').val().toString(),
+            potenciaCalentador: $('#heat-power').val().toString(),
+            flujoEntranteAgua: $('#in-water-flow').val().toString(),
+            flujoSalienteAgua: $('#out-water-flow').val().toString(),
+            actualTemp: $('#actual-temp').val().toString(),
+            desiredTemp: $('#desired-temp').val().toString(),
+            time: currentSimulation.time.toString()
+        });
+        $('#simulaciones-guardadas').append('<option value=' + indexSelect + ' >' + "TF:" + $('#actual-temp').val().toString() + ",  " + "T:" + currentSimulation.time.toString() + '</option>');
         $saveInfo.prop('disabled', true);
         alert("La información se almacenó correctamente");
+    });
+
+    var simulacionesGuardadas = [];
+    var indexSelect = 0;
+   
+    $.ajax({
+        url: '/Simulator/Get',
+        dataType: "json",
+        type: "GET",
+        contentType: 'application/json; charset=utf-8',
+        async: true,
+        processData: false,
+        cache: false,
+        success: function (data) {
+            $.each(data, function (index, item) {
+               
+                simulacionesGuardadas.push({
+                    id: item.id,
+                    envTemp: item.envTemp,
+                    volumenTanque: item.volumenTanque,
+                    volumenAgua: item.volumenAgua,
+                    potenciaCalentador: item.potenciaCalentador,
+                    flujoEntranteAgua: item.flujoEntranteAgua,
+                    flujoSalienteAgua: item.flujoSalienteAgua,
+                    actualTemp: item.actualTemp,
+                    desiredTemp: item.desiredTemp,
+                    time: item.time
+                });
+
+            });
+            $('#simulaciones-guardadas').append('<option value="">'+""+'</option>');
+            $.each(simulacionesGuardadas, function (index, item) {
+                $('#simulaciones-guardadas').append('<option value=' + index + ' >' + "TF:" + item.actualTemp + ",  " + "T:" + item.time + '</option>');
+                indexSelect = indexSelect + 1;
+            });
+        },
+        error: function (xhr) {
+            alert('error');
+        }
+    });
+
+    var indexsimulacionesguardadas = 0;
+
+    $('#simulaciones-guardadas').on('change', function () {
+        indexsimulacionesguardadas = this.value;
+        if (this.value == "") {
+        } else {
+            
+            $.each(simulacionesGuardadas, function (index, item) {
+               if (index==indexsimulacionesguardadas) {
+                $('#env-temp').val(parseFloat(item.envTemp));
+                $('#tank-volume').val(parseFloat(item.volumenTanque));
+                $('#water-volume').val(parseFloat(item.volumenAgua));
+                $('#heat-power').val(parseFloat(item.potenciaCalentador));
+                $('#in-water-flow').val(parseFloat(item.flujoEntranteAgua));
+                $('#out-water-flow').val(parseFloat(item.flujoSalienteAgua));
+                   
+                }
+            });
+        }
     });
 
 });

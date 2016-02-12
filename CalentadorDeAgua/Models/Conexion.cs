@@ -5,6 +5,7 @@ using System.Web;
 using System.Data;
 using System.Data.Sql;
 using System.Data.SqlClient;
+using System.Collections.Generic;
 
 
 namespace CalentadorDeAgua.Models
@@ -23,6 +24,40 @@ namespace CalentadorDeAgua.Models
             cn = new SqlConnection("Data Source=.;Initial Catalog=SimulacionCalentadorDeAgua;Integrated Security=True");
             cn.Open();
 
+        }
+
+        public List<CalentadorDeAguaContext> get()
+        {
+            List<CalentadorDeAguaContext> datos = new List<CalentadorDeAguaContext>();
+
+            string cmdString = "SELECT * FROM Tanque";
+            using (SqlCommand comm = new SqlCommand(cmdString))
+            {
+
+                comm.Connection = cn;
+               // try
+                //{
+                    //comm.ExecuteNonQuery();
+                    using (SqlDataReader reader = comm.ExecuteReader())
+                    {
+                        while (reader.Read())
+                    
+                        {
+                            datos.Add(new CalentadorDeAguaContext(reader["id"].ToString(),reader["envTemp"].ToString(), reader["volumenTanque"].ToString()
+                                       , reader["volumenAgua"].ToString(), reader["potenciaCalentador"].ToString(), reader["flujoEntranteAgua"].ToString(),
+                                       reader["flujoSalienteAgua"].ToString(), reader["actualTemp"].ToString(), reader["desiredTemp"].ToString(),
+                                       reader["time"].ToString()));
+                        }
+                    }
+
+                    
+                //}
+                //catch
+                //{
+                    
+                //}
+            }
+            return datos;
         }
 
         public string insertar(string envTemp, string volumenTanque, string volumenAgua, string potenciaCalentador,
@@ -50,7 +85,6 @@ namespace CalentadorDeAgua.Models
                 {
 
                 comm.ExecuteNonQuery();
-                contador++;
                 }catch
                 {
                     salida = "ERROR";
