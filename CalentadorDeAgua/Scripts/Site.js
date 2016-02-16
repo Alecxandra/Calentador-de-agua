@@ -347,7 +347,7 @@
         });
         simulacionesGuardadas.push({
             id: indexSelect,
-            envtemp: $('#env-temp').val().toString(),
+            envTemp: $('#env-temp').val().toString(),
             volumenTanque: $('#tank-volume').val().toString(),
             volumenAgua: $('#water-volume').val().toString(),
             potenciaCalentador: $('#heat-power').val().toString(),
@@ -358,6 +358,7 @@
             time: currentSimulation.time.toString()
         });
         $('#simulaciones-guardadas').append('<option value=' + indexSelect + ' >' + "TF:" + $('#actual-temp').val().toString() + ",  " + "T:" + currentSimulation.time.toString() + '</option>');
+        indexSelect = indexSelect + 1;
         $saveInfo.prop('disabled', true);
         alert("La información se almacenó correctamente");
     });
